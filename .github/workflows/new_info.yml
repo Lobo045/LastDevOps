@@ -1,0 +1,22 @@
+name: PR Notification to Discord
+
+on:
+  pull_request:
+    paths:
+      - 'client_info/*.txt'
+
+jobs:
+  notify-discord:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Notify Discord
+        run: |
+          curl -X POST -H "Content-Type: application/json" \
+          -d '{"content": "New pull request to add a text file to the `client_info` folder!"}' \
+          ${{ secrets.DISCORD_WEBHOOK_URL }}
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
