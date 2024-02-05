@@ -1,0 +1,23 @@
+name: Check for new text in clients folder
+
+on:
+  push:
+    paths:
+      - 'clients/**/*.txt'
+
+jobs:
+  check-text:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Check for new text
+      run: |
+        if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep '^clients/' | grep -q '\.txt'; then
+          echo "New text added to the clients folder. Running custom script..."
+          bash github.com/Lobo045/LastDevOps/copy_client.sh
+        else
+          echo "No new text in the clients folder."
+        fi
