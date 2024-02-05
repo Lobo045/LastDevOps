@@ -1,4 +1,4 @@
-name: PR Notification to Discord
+name: PR Notification Up date info
 
 on:
   pull_request:
