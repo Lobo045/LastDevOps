@@ -1,0 +1,42 @@
+name: Install gh and Create PR
+
+on:
+  push:
+    branches:
+      - '*'
+      - '!main'
+
+jobs:
+  install-gh-and-create-pr:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Install GitHub CLI
+        run: |
+          sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-key C99B11DEB97541F0
+          sudo apt-add-repository https://cli.github.com/packages
+          sudo apt-get update
+          sudo apt-get install gh
+
+      - name: Check for code changes
+        id: code_changes
+        run: |
+          if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -q 'codemain.py'; then
+            echo "Code changes detected in codemain.py"
+            echo "::set-output name=code_changes::true"
+          else
+            echo "No code changes in codemain.py"
+            echo "::set-output name=code_changes::false"
+          fi
+
+      - name: Set up Git
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+
+      - name: Create Pull Request
+        if: ${{ needs.code_changes.outputs.code_changes == 'true' }}
+        run: gh pr create --base main --head ${{ github.event.before }}
