@@ -1,0 +1,23 @@
+name: PR Notification Change to Files
+
+on:
+  pull_request:
+    paths:
+      - '*.py'
+      - '*.sh'
+
+jobs:
+  notify-discord:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Notify Discord
+        run: |
+          curl -X POST -H "Content-Type: application/json" \
+          -d '{"content": "Pull request with Python or Shell script changes in the main branch!"}' \
+          ${{ secrets.DISCORD_WEBHOOK_URL }}
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
