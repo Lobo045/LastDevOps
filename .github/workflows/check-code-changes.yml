@@ -1,37 +1,22 @@
-name: Notify Discord on Pull Request
+name: PR Notification to Discord
 
 on:
   pull_request:
-    types:
-      - opened
-      - synchronize
+    branches:
+      - main
 
 jobs:
-  notify_discord:
+  notify-discord:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repository
+      - name: Checkout code
         uses: actions/checkout@v2
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '14'
-
-      - name: Install Dependencies
-        run: npm install
 
       - name: Notify Discord
         run: |
-          if [[ "$(jq -r .action <<< $GITHUB_EVENT_PATH)" == "opened" ]] || [[ "$(jq -r .action <<< $GITHUB_EVENT_PATH)" == "synchronize" ]]; then
-            PR_TITLE=$(jq -r .pull_request.title <<< $GITHUB_EVENT_PATH)
-            PR_URL=$(jq -r .pull_request.html_url <<< $GITHUB_EVENT_PATH)
-            PR_USER=$(jq -r .pull_request.user.login <<< $GITHUB_EVENT_PATH)
-
-            if [[ "$PR_TITLE" == *"Modify code"* ]]; then
-              curl -X POST -H "Content-Type: application/json" -d '{"content": "New pull request: **'"$PR_TITLE"'** by **'"$PR_USER"'**. [View Pull Request]('"$PR_URL"')"}' ${{ secrets.DISCORD_WEBHOOK_URL }}
-            fi
-          fi
+          curl -X POST -H "Content-Type: application/json" \
+          -d '{"content": "New pull request created!"}' \
+          ${{ secrets.DISCORD_WEBHOOK_URL }}
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
