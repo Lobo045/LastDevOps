@@ -2,6 +2,8 @@ name: Check for new text in clients folder
 
 on:
   push:
+    branches:
+      - main
     paths:
       - 'clients/**/*.txt'
 
