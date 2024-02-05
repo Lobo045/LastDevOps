@@ -32,6 +32,9 @@ def list_clients():
         print("List of clients:")
         for client in clients:
             print(f"- {client}")
+        
+def deleteClient ():
+    {}
 
 # Example of usage
 if __name__ == "__main__":
