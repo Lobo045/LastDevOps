@@ -1,4 +1,5 @@
-name: Python Workflow
+name: Discord Notification on Modify Code
+
 on:
   pull_request:
     types:
@@ -6,15 +7,24 @@ on:
       - synchronize
 
 jobs:
-  build:
+  discord-notification:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
+    - name: Check out code
       uses: actions/checkout@v2
-      
-    - name: Notify on pull request with "Modify code" message
-      if: github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'Modify code')
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '14'
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Send Discord notification
+      if: contains(github.event.pull_request.title, 'Modify code')
       run: |
-        DISCORD_WEBHOOK_URL="<DISCORD_WEBHOOK_URL>"
-        curl -X POST -H "Content-Type: application/json" -d '{"content": "Pull request with \"Modify code\" message created: '${{ github.event.pull_request.html_url }}'"}' $DISCORD_WEBHOOK_URL
+        node sendDiscordNotification.js
+      env:
+        DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
