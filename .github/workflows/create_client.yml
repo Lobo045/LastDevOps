@@ -1,4 +1,4 @@
-name: PR Notification to Discord
+name: PR Notification New Client
 
 on:
   pull_request:
