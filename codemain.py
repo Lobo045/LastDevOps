@@ -7,17 +7,6 @@ def create_client(client_name):
         client_file.write(f"Projects for {client_name}:\n")
     print(f"Client '{client_name}' created successfully!")
 
-def add_project_to_client(client_name, project_name):
-    client_file_path = f"clients/{client_name}.txt"
-    with open(client_file_path, 'a') as client_file:
-        client_file.write(f"- {project_name}\n")
-    print(f"Project '{project_name}' added to client '{client_name}' successfully!")
-
-def create_client_info(client_name, client_info):
-    client_info_file_path = f"client_info/{client_name}_info.txt"
-    with open(client_info_file_path, 'w') as info_file:
-        info_file.write(client_info)
-    print(f"Client information for '{client_name}' created successfully!")
 
 def check_if_client_exists(client_name):
     client_file_path = f"clients/{client_name}.txt"
