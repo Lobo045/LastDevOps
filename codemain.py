@@ -1,6 +1,5 @@
 import os
 
-
 # Example of usage
 if __name__ == "__main__":
     while True:
